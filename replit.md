@@ -4,6 +4,15 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Run & Operate
 
+### Codex to GitHub to Replit
+
+- Canonical repository: https://github.com/akshn18/Electronics-Shop-with-Shopping-Assistant.git
+- Integration branch: `main`.
+- Codex checks, commits, and pushes completed requested changes to `origin/main` according to `AGENTS.md`.
+- In Replit, confirm the Git remote matches this repository and the active branch is `main`, then click **Sync changes** after a push. Run or restart the app if necessary.
+- Keep `OPENAI_API_KEY` and `DATABASE_URL` in Replit Secrets. Live shopping assistant verification happens in Replit.
+- Before switching from Replit edits to Codex edits, commit and push the Replit changes so Codex can fetch them. Resolve any conflicts before continuing the sync flow.
+
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
