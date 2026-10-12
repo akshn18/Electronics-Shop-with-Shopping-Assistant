@@ -1,5 +1,6 @@
 import {
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -18,6 +19,7 @@ export const assistantBehaviorSettingsTable = pgTable(
         "Help each shopper identify the best-fitting product from the catalog for their needs, budget, and priorities.",
       ),
     empathyScale: integer("empathy_scale").notNull(),
+    empathyExamples: jsonb("empathy_examples").$type<string[]>().notNull().default([]),
     goalOrientationScale: integer("goal_orientation_scale").notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()

@@ -18,6 +18,7 @@ const defaults: SettingsForm = {
   tone: '',
   initiativeGoal: '',
   empathyScale: 5,
+  empathyExamples: ['', '', '', '', ''],
   goalOrientationScale: 5,
 };
 
@@ -39,6 +40,7 @@ export default function Admin() {
         tone: settingsQuery.data.tone,
         initiativeGoal: settingsQuery.data.initiativeGoal,
         empathyScale: settingsQuery.data.empathyScale,
+        empathyExamples: settingsQuery.data.empathyExamples,
         goalOrientationScale: settingsQuery.data.goalOrientationScale,
       });
     }
@@ -54,6 +56,7 @@ export default function Admin() {
           tone: updated.tone,
           initiativeGoal: updated.initiativeGoal,
           empathyScale: updated.empathyScale,
+          empathyExamples: updated.empathyExamples,
           goalOrientationScale: updated.goalOrientationScale,
         });
         setSaved(true);
@@ -165,6 +168,28 @@ export default function Admin() {
                     high="Highly considerate"
                     testId="slider-empathy"
                   />
+                  <fieldset className="admin-empathy-examples">
+                    <legend className="admin-field-label">Empathy examples at five levels</legend>
+                    <p className="admin-empathy-help">Write a sample reply for each level, including the shopper's context when helpful. The assistant adapts these examples to the selected empathy score; it does not repeat them word for word.</p>
+                    {['Practical · 0/10', 'Light acknowledgment · 2.5/10', 'Balanced · 5/10', 'Supportive · 7.5/10', 'Highly considerate · 10/10'].map((label, index) => (
+                      <FormField
+                        key={label}
+                        control={form.control}
+                        name={`empathyExamples.${index}`}
+                        rules={{
+                          validate: (value) => value.trim().length > 0 || 'Add an empathy statement before saving.',
+                          maxLength: { value: 500, message: 'Keep each statement under 500 characters.' },
+                        }}
+                        render={({ field, fieldState }) => (
+                          <FormItem className="admin-empathy-field">
+                            <div className="admin-field-label-line"><FormLabel className="admin-field-label">{index + 1}. {label}</FormLabel><span className="admin-char-count">{field.value.length} / 500</span></div>
+                            <FormControl><textarea {...field} className="admin-textarea admin-goal-textarea" rows={3} maxLength={500} placeholder="Write an example response showing this level of empathy." aria-invalid={Boolean(fieldState.error)} data-testid={`input-empathy-example-${index + 1}`} /></FormControl>
+                            {fieldState.error && <p role="alert" className="admin-empathy-error">{fieldState.error.message}</p>}
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </fieldset>
                   <RangeSetting
                     name="goalOrientationScale"
                     control={form.control}

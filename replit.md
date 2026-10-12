@@ -13,6 +13,12 @@ _Replace the heading above with the project's name, and this line with one sente
 - Keep `OPENAI_API_KEY` and `DATABASE_URL` in Replit Secrets. Live shopping assistant verification happens in Replit.
 - Before switching from Replit edits to Codex edits, commit and push the Replit changes so Codex can fetch them. Resolve any conflicts before continuing the sync flow.
 
+### Empathy examples
+
+The admin empathy controls include five editable statements, anchored at scores 0, 2.5, 5, 7.5, and 10. The assistant blends neighboring examples for intermediate slider values and adapts them to the shopper's context. Each statement is required and limited to 500 characters.
+
+After syncing this feature, apply the database schema before restarting the app. The post-merge hook runs `pnpm --filter @workspace/db run push`. If Replit sync does not run that hook, run the same command in Replit Shell. This adds the `empathy_examples` column without deleting existing settings; older settings receive starter examples when loaded.
+
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages

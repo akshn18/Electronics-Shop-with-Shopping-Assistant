@@ -405,6 +405,11 @@
 
 .admin-goal-field { padding:18px 0 20px;border-top:1px solid #e9e5da; }
 .admin-goal-textarea { min-height:92px; }
+.admin-empathy-examples { min-width:0;margin:0;padding:18px 0 20px;border:0;border-top:1px solid #e9e5da; }
+.admin-empathy-examples legend { padding:0 8px 0 0; }
+.admin-empathy-help { color:#788176;font-size:11px;line-height:1.7;margin:0 0 16px; }
+.admin-empathy-field + .admin-empathy-field { margin-top:16px; }
+.admin-empathy-error { color:#a45f45;font-size:11px;margin:6px 0 0; }
 @media (max-width:680px) {
   .admin-goal-field { padding:16px 0 18px; }
 }

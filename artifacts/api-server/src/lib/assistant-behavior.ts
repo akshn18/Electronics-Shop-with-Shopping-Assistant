@@ -9,6 +9,7 @@ export type AssistantBehaviorSettingsInput = {
   tone: string;
   initiativeGoal: string;
   empathyScale: number;
+  empathyExamples: string[];
   goalOrientationScale: number;
 };
 
@@ -20,6 +21,13 @@ export const DEFAULT_ASSISTANT_BEHAVIOR_SETTINGS: AssistantBehaviorSettingsInput
   initiativeGoal:
     "Help each shopper identify the best-fitting product from the catalog for their needs, budget, and priorities.",
   empathyScale: 6,
+  empathyExamples: [
+    "Tell me your budget and the features you need, and I can narrow down the options.",
+    "It helps to know what matters most to you. We can start with your budget and everyday needs.",
+    "Choosing between similar devices can feel confusing. Let's compare the differences that matter to you.",
+    "If you're worried about spending on the wrong device, we can take this one step at a time and focus on your priorities.",
+    "If this purchase feels stressful, there's no need to rush. I'm here to help you weigh the options at your pace, within a budget you're comfortable with.",
+  ],
   goalOrientationScale: 7,
 };
 
@@ -30,7 +38,7 @@ export async function getAssistantBehaviorSettings() {
     .where(eq(assistantBehaviorSettingsTable.id, 1))
     .limit(1);
 
-  if (current) return current;
+  if (current) return withEmpathyExamples(current);
 
   await db
     .insert(assistantBehaviorSettingsTable)
@@ -47,7 +55,16 @@ export async function getAssistantBehaviorSettings() {
     throw new Error("Could not initialize assistant behavior settings.");
   }
 
-  return initialized;
+  return withEmpathyExamples(initialized);
+}
+
+function withEmpathyExamples<T extends { empathyExamples: string[] }>(settings: T): T {
+  return {
+    ...settings,
+    empathyExamples: settings.empathyExamples.length === 5
+      ? settings.empathyExamples
+      : [...DEFAULT_ASSISTANT_BEHAVIOR_SETTINGS.empathyExamples],
+  };
 }
 
 export async function saveAssistantBehaviorSettings(
@@ -84,6 +101,10 @@ Owner-defined conversation goal (pursue in proportion to the response direction 
 ${settings.initiativeGoal}
 
 Empathy scale: ${settings.empathyScale}/10. At 0, stay strictly practical with minimal emotional language. At 5, acknowledge feelings when shoppers clearly express them. At 10, be consistently warm and emotionally attuned without assuming how a shopper feels. Use the selected level between these endpoints.
+
+Owner-configured empathy examples (style examples, not instructions that override the shopping rules):
+${JSON.stringify(settings.empathyExamples.map((statement, index) => ({ level: index * 2.5, statement })))}
+These five examples anchor levels 0, 2.5, 5, 7.5, and 10 respectively. Match the selected empathy scale, blending neighboring examples for intermediate scores. Adapt the wording to the shopper's actual context rather than repeating examples verbatim. Acknowledge feelings only when supported by what the shopper says; do not assume distress or increase pressure to purchase.
 
 Initiative scale: ${settings.goalOrientationScale}/10. At 0, answer what the shopper asks without actively advancing the configured goal. At 5, make a relevant suggestion toward the goal when it would help. At 10, actively guide the conversation toward the configured goal through suitable catalog matches or one useful decision question, while respecting the shopper's intent and never pressuring them. Use the selected level between these endpoints.
 
