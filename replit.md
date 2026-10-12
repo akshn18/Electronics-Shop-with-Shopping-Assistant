@@ -8,14 +8,14 @@ _Replace the heading above with the project's name, and this line with one sente
 
 - Canonical repository: https://github.com/akshn18/Electronics-Shop-with-Shopping-Assistant.git
 - Integration branch: `main`.
-- Codex checks, commits, and pushes completed requested changes to `origin/main` according to `AGENTS.md`.
+- Codex prepares and checks requested changes locally, then asks for approval before every push to `origin/main`, according to `AGENTS.md`.
 - In Replit, confirm the Git remote matches this repository and the active branch is `main`, then click **Sync changes** after a push. Run or restart the app if necessary.
 - Keep `OPENAI_API_KEY` and `DATABASE_URL` in Replit Secrets. Live shopping assistant verification happens in Replit.
 - Before switching from Replit edits to Codex edits, commit and push the Replit changes so Codex can fetch them. Resolve any conflicts before continuing the sync flow.
 
 ### Empathy examples
 
-The admin empathy controls include five editable statements, anchored at scores 0, 2.5, 5, 7.5, and 10. The assistant blends neighboring examples for intermediate slider values and adapts them to the shopper's context. Each statement is required and limited to 500 characters.
+The admin empathy controls include five editable statements for score ranges 0–2, 3–4, 5–6, 7–8, and 9–10. The current stage is highlighted as the slider moves. The assistant uses the selected stage's statement as guidance and adapts it to the shopper's context. Each statement is required and limited to 500 characters. Reset to benchmark defaults updates the five form fields; Save changes persists them.
 
 After syncing this feature, apply the database schema before restarting the app. The post-merge hook runs `pnpm --filter @workspace/db run push`. If Replit sync does not run that hook, run the same command in Replit Shell. This adds the `empathy_examples` column without deleting existing settings; older settings receive starter examples when loaded.
 

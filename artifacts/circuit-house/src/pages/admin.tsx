@@ -22,6 +22,14 @@ const defaults: SettingsForm = {
   goalOrientationScale: 5,
 };
 
+const empathyStages = [
+  { range: '0–2', max: 2, title: 'Strictly Objective', description: 'Direct specs, compatibility, and pricing without emotional language.', benchmark: 'State technical specifications, compatibility, and pricing directly and factually without emotional commentary. Use only verified details from the catalog.' },
+  { range: '3–4', max: 4, title: 'Polite & Concise', description: 'Courteous acknowledgment of shopper needs while staying focused on requirements.', benchmark: "Acknowledge requirements respectfully and offer courteous, direct guidance without probing into personal feelings (e.g., 'I understand you need a travel-friendly laptop; here are lightweight options within budget.')." },
+  { range: '5–6', max: 6, title: 'Balanced & Attentive', description: 'Thoughtful validation of preferences, budget dilemmas, and practical trade-offs.', benchmark: "Validate shopper priorities, trade-offs, and practical hesitations with thoughtful, balanced empathy (e.g., 'Balancing battery life against display sharpness is a common dilemma; let’s see which matches your daily usage best.')." },
+  { range: '7–8', max: 8, title: 'Supportive & Reassuring', description: 'Active reassurance easing purchase anxiety and relating to user hesitation.', benchmark: "Actively ease purchasing anxiety, validate user uncertainties, and offer warm reassurance (e.g., 'It’s completely natural to worry about headphone comfort during long commutes; let’s prioritize comfort when comparing the available options.')." },
+  { range: '9–10', max: 10, title: 'Deeply Warm & Attuned', description: 'Deep personal warmth and validation, prioritizing shopper peace of mind above all.', benchmark: "Demonstrate deep personal care, validate expressed stress or enthusiasm, and prioritize the shopper’s peace of mind (e.g., 'Having your laptop break before exams sounds stressful. Let’s work through reliable options at your pace, within your budget.')." },
+];
+
 export default function Admin() {
   const queryClient = useQueryClient();
   const settingsQuery = useGetAssistantBehaviorSettings({
@@ -32,6 +40,13 @@ export default function Admin() {
   const [saveFailed, setSaveFailed] = useState(false);
   const form = useForm<SettingsForm>({ defaultValues: defaults, mode: 'onChange' });
   const { reset } = form;
+  const empathyScore = form.watch('empathyScale');
+  const activeEmpathyStage = empathyStages.findIndex((stage) => empathyScore <= stage.max);
+  const resetEmpathyExamples = () => {
+    form.setValue('empathyExamples', empathyStages.map((stage) => stage.benchmark), { shouldDirty: true, shouldValidate: true });
+    setSaved(false);
+    setSaveFailed(false);
+  };
 
   useEffect(() => {
     if (settingsQuery.data) {
@@ -168,12 +183,15 @@ export default function Admin() {
                     high="Highly considerate"
                     testId="slider-empathy"
                   />
-                  <fieldset className="admin-empathy-examples">
-                    <legend className="admin-field-label">Empathy examples at five levels</legend>
-                    <p className="admin-empathy-help">Write a sample reply for each level, including the shopper's context when helpful. The assistant adapts these examples to the selected empathy score; it does not repeat them word for word.</p>
-                    {['Practical · 0/10', 'Light acknowledgment · 2.5/10', 'Balanced · 5/10', 'Supportive · 7.5/10', 'Highly considerate · 10/10'].map((label, index) => (
+                  <section className="admin-empathy-examples" aria-labelledby="empathy-examples-title">
+                    <div className="admin-empathy-heading">
+                      <div><div className="admin-section-kicker">Empathy stage guidance</div><h3 id="empathy-examples-title">Five statements of empathy examples</h3></div>
+                      <button type="button" className="admin-empathy-reset" onClick={resetEmpathyExamples} disabled={saveSettings.isPending} data-testid="button-reset-empathy-examples"><RotateCcw size={14} /> Reset to benchmark defaults</button>
+                    </div>
+                    <p className="admin-empathy-help">Define 5 statements demonstrating how the assistant responds across each empathy stage. These examples give the conversational agent concrete context and benchmark the emotional tone at each level.</p>
+                    {empathyStages.map((stage, index) => (
                       <FormField
-                        key={label}
+                        key={stage.title}
                         control={form.control}
                         name={`empathyExamples.${index}`}
                         rules={{
@@ -181,15 +199,19 @@ export default function Admin() {
                           maxLength: { value: 500, message: 'Keep each statement under 500 characters.' },
                         }}
                         render={({ field, fieldState }) => (
-                          <FormItem className="admin-empathy-field">
-                            <div className="admin-field-label-line"><FormLabel className="admin-field-label">{index + 1}. {label}</FormLabel><span className="admin-char-count">{field.value.length} / 500</span></div>
+                          <FormItem className={`admin-empathy-field${activeEmpathyStage === index ? ' is-active' : ''}`}>
+                            <div className="admin-empathy-stage-header">
+                              <FormLabel className="admin-empathy-stage-label"><span className="admin-empathy-stage-number">Stage {String(index + 1).padStart(2, '0')}</span><span className="admin-empathy-stage-range">Scale {stage.range}</span><span className="admin-empathy-stage-title">{stage.title}</span></FormLabel>
+                              <div className="admin-empathy-stage-meta">{activeEmpathyStage === index && <span className="admin-empathy-active" data-testid="active-empathy-stage">Active stage · {empathyScore}/10</span>}<span className="admin-char-count">{field.value.length} / 500</span></div>
+                            </div>
+                            <p className="admin-empathy-description">{stage.description}</p>
                             <FormControl><textarea {...field} className="admin-textarea admin-goal-textarea" rows={3} maxLength={500} placeholder="Write an example response showing this level of empathy." aria-invalid={Boolean(fieldState.error)} data-testid={`input-empathy-example-${index + 1}`} /></FormControl>
                             {fieldState.error && <p role="alert" className="admin-empathy-error">{fieldState.error.message}</p>}
                           </FormItem>
                         )}
                       />
                     ))}
-                  </fieldset>
+                  </section>
                   <RangeSetting
                     name="goalOrientationScale"
                     control={form.control}

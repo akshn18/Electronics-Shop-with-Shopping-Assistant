@@ -2,7 +2,7 @@
 
 - Canonical remote: https://github.com/akshn18/Electronics-Shop-with-Shopping-Assistant.git
 - Work on `main`, tracking `origin/main`, unless the user requests a different branch.
-- The user authorizes committing and pushing each completed requested change to `origin/main` after relevant checks pass. This is part of each coding task, not a scheduled job or a filesystem watcher.
+- Complete and check each requested change locally, then ask the user for explicit approval before every push to `origin/main`. Do not push until they approve that specific push. This replaces the previous automatic-push preference.
 - Inspect status and fetch before editing. Fast-forward only when the working tree is clean. Preserve unrelated user changes. Stop and report conflicts, failed checks, authentication failures, or branch protection restrictions; never force-push or discard work.
 - Stage only reviewed task files. Never commit API keys, credentials, environment files, dependencies, build output, or temporary preview helpers.
 - Use Replit for previews and live assistant testing. Do not start a local preview or require a local API key or database unless the user explicitly asks.

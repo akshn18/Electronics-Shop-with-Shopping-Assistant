@@ -405,11 +405,33 @@
 
 .admin-goal-field { padding:18px 0 20px;border-top:1px solid #e9e5da; }
 .admin-goal-textarea { min-height:92px; }
-.admin-empathy-examples { min-width:0;margin:0;padding:18px 0 20px;border:0;border-top:1px solid #e9e5da; }
-.admin-empathy-examples legend { padding:0 8px 0 0; }
-.admin-empathy-help { color:#788176;font-size:11px;line-height:1.7;margin:0 0 16px; }
+.admin-empathy-examples { min-width:0;margin:0 0 24px;padding:24px 26px 26px;border:1px solid #dedbce;background:#f7f5ec; }
+.admin-empathy-heading { display:flex;justify-content:space-between;align-items:flex-start;gap:16px; }
+.admin-empathy-heading h3 { color:#254b3e;font-size:18px;font-weight:700;line-height:1.35;margin:7px 0 0; }
+.admin-empathy-reset { display:inline-flex;align-items:center;justify-content:center;gap:9px;flex-shrink:0;padding:10px 13px;border:1px solid #d4d0c2;background:#ebe9dd;color:#375d4d;font:11px var(--app-font-mono);cursor:pointer; }
+.admin-empathy-reset:hover:not(:disabled) { background:#e1e5d9; }
+.admin-empathy-reset:disabled { opacity:.5;cursor:not-allowed; }
+.admin-empathy-help { max-width:790px;color:#788176;font-size:12px;line-height:1.8;margin:9px 0 22px; }
+.admin-empathy-field { min-width:0;padding:18px 19px 13px;border:1px solid #dedbce;background:#faf9f3; }
 .admin-empathy-field + .admin-empathy-field { margin-top:16px; }
+.admin-empathy-field.is-active { border-color:#326a56;box-shadow:inset 4px 0 #326a56; }
+.admin-empathy-stage-header { display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap; }
+.admin-empathy-stage-label { display:flex;align-items:center;gap:10px;flex-wrap:wrap; }
+.admin-empathy-stage-number { background:#e5eee6;color:#285c4b;padding:3px 7px;text-transform:uppercase;font:10px var(--app-font-mono);letter-spacing:.07em; }
+.admin-empathy-stage-range { background:#ece9de;color:#777a6f;padding:3px 7px;font:10px var(--app-font-mono); }
+.admin-empathy-stage-title { color:#254b3e;font-size:13px;font-weight:700; }
+.admin-empathy-stage-meta { display:flex;align-items:center;gap:12px;margin-left:auto; }
+.admin-empathy-active { background:#326a56;color:#fffdf3;padding:3px 8px;border-radius:2px;text-transform:uppercase;font:9px var(--app-font-mono);letter-spacing:.04em; }
+.admin-empathy-description { margin:10px 0 11px;color:#81877a;font-size:11px;line-height:1.6; }
+.admin-empathy-field .admin-textarea { min-height:92px;font-size:12px;line-height:1.75; }
 .admin-empathy-error { color:#a45f45;font-size:11px;margin:6px 0 0; }
 @media (max-width:680px) {
+  .admin-empathy-examples { padding:18px 12px;margin-bottom:18px; }
+  .admin-empathy-heading { flex-direction:column;gap:12px; }
+  .admin-empathy-reset { width:100%;font-size:10px; }
+  .admin-empathy-heading h3 { font-size:17px; }
+  .admin-empathy-field { padding:14px 12px; }
+  .admin-empathy-stage-meta { margin-left:0;width:100%;justify-content:space-between; }
+  .admin-empathy-stage-title { width:100%; }
   .admin-goal-field { padding:16px 0 18px; }
 }
